@@ -1,72 +1,61 @@
-const bind = function(callback, param) {
-  return function(...params) {
+const bind = function (callback, param) {
+  return function (...params) {
     return callback(param, ...params);
   };
 };
 
-const curry = function(callback) {
+const curry = function (callback) {
   return function curried(...param) {
     if (param.length >= callback.length) {
       return callback(...param);
     } else {
-      return function(...param2) {
+      return function (...param2) {
         return curried(...param, ...param2);
       };
     }
   };
 };
 
-function wrapper() {
-  let sum = 0;
-  return function sumArr(array) {
-    if (array.length) {
-      sum += array.pop();
-      return sumArr(array);
+const reduce = function (array, callback, initialValue) {
+  var index = 0;
+  var previousValue = initialValue === undefined ? array[index++] : initialValue;
+
+  function fold(currentValue, list) {
+    // console.log(`previousValue: ${currentValue}, currentValue: ${list[0]}, index: ${index}, list: ${list}`)
+    if (list.length) {
+      return fold(callback(currentValue, list.shift(), index++, array), list);
     } else {
-      return sum;
+      return currentValue;
     }
-  };
+  }
+
+  return fold(previousValue, array.slice(index, array.length))
 }
 
-// function sumArr(array, sum) {
-//    sum = sum || 0;
-//    if (array.length) {
-//       return sumArr(array.slice(0, -1), sum + array[array.length - 1]);
-//    } else {
-//       return sum;
-//    }
-// }
+const map = function (array, callback) {
+  return reduce(array, function (previousValue, currentValue) {
+    return [...previousValue, callback(currentValue)]
+  }, []);
+}
 
-// [1, 2, 3]
-let reduce = function(callback, initialValue) {
-  return function fold(array, result) {
-    result = result || initialValue || array.shift();
-    if (array.length) {
-      return fold(array, callback(result, array.shift()));
+// const a = map([1, 4, 9], (item) => item * 2);
+
+const filter = function (array, callback) {
+  return reduce(array, function (previousValue, currentValue) {
+    if (callback(currentValue)) {
+      return [...previousValue, currentValue]
     } else {
-      return result;
+      return previousValue
     }
-  };
-};
+  }, [])
+}
 
-let a = reduce((previousValue, currentValue) => previousValue + currentValue);
-a([1, 2, 3]);
-
-// let fold = function (array, callback, initialValue) {
-//    let previousValue = initialValue || 0;
-//    array.map((currentValue, index) => {
-//       previousValue = callback(previousValue, currentValue, index, array)
-//    })
-
-//    return previousValue;
-// }
-
-fold(
-  [1, 2, 3, 4],
-  (previousValue, currentValue) => previousValue + currentValue
-);
+// const a = filter([1, 2, 3, 4], item => item%2 == 0? true : false)
 
 module.exports = {
   bind,
-  curry
+  curry,
+  reduce,
+  map,
+  filter
 };
