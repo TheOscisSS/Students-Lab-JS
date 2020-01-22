@@ -1,23 +1,22 @@
-const bind = function(callback, param) {
-  return function(...params) {
+const bind = function (callback, param) {
+  return function (...params) {
     return callback(param, ...params);
   };
 };
 
-const curry = function(callback) {
+const curry = function (callback) {
   return function curried(...param) {
     if (param.length >= callback.length) {
       return callback(...param);
     } else {
-      return function(...param2) {
+      return function (...param2) {
         return curried(...param, ...param2);
       };
     }
   };
 };
 
-//[4, 5, 8, 12]
-const reduce = function(array, callback, initialValue) {
+const reduce = function (array, callback, initialValue) {
   var index = 0;
   var previousValue =
     initialValue === undefined ? array[index++] : initialValue;
@@ -33,29 +32,29 @@ const reduce = function(array, callback, initialValue) {
   return fold(previousValue, array.slice(index, array.length));
 };
 
-const unwrap = function(callback, initialValue) {
+const unwrap = function (callback, initialValue) {
   function unfold(current, array) {
     if ((next = callback(current))) {
       return unfold(next[1], [...array, next[0]]);
     } else return array;
   }
-  return unfold(initialValue, []);
+  return unfold(initialValue || 0, []);
 };
 
-const map = function(array, callback) {
+const map = function (array, callback) {
   return reduce(
     array,
-    function(previousValue, currentValue, index) {
+    function (previousValue, currentValue, index) {
       return [...previousValue, callback(currentValue, index, array)];
     },
     []
   );
 };
 
-const filter = function(array, callback) {
+const filter = function (array, callback) {
   return reduce(
     array,
-    function(previousValue, currentValue, index) {
+    function (previousValue, currentValue, index) {
       if (callback(currentValue, index, array)) {
         return [...previousValue, currentValue];
       } else {
@@ -66,8 +65,9 @@ const filter = function(array, callback) {
   );
 };
 
-const avgEven = function(array) {
+const avgEven = function (array) {
   const evenArray = filter(array, item => (item % 2 == 0 ? true : false));
+  if (!evenArray.length) return undefined;
   const sumEvenArray = reduce(
     evenArray,
     (previous, current) => previous + current
@@ -75,12 +75,15 @@ const avgEven = function(array) {
   return sumEvenArray / evenArray.length;
 };
 
-const randSum = function() {
-  return reduce(array, (previous, current) => previous + current);
+const randSum = function () {
+  let count = 0;
+  let array = unwrap(current => ++count >= 10 ? false : [current, current + Math.floor(Math.random() * 10)], 1);
+  return reduce(array, (previousValue, currentValue) => previousValue + currentValue)
 };
 
-const first = function(array, callback) {
+const first = function (array, callback) {
   var index = 0;
+
   function find(currentValue) {
     if (currentValue === undefined) return undefined;
     if (!callback(currentValue, index, array)) {
@@ -90,22 +93,34 @@ const first = function(array, callback) {
   return find(array[index]);
 };
 
-function isPrime(element, index, array) {
-  var start = 2;
-  while (start <= Math.sqrt(element)) {
-    if (element % start++ < 1) {
-      return false;
+let lazy = function (callback, ...param) {
+  return function () {
+    return callback(...para);
+  };
+};
+
+let memoization = function (callback) {
+  let cache = {}
+  return function (...param) {
+    console.log(cache)
+    param = param.slice(0, callback.length)
+    if (param in cache) {
+      console.log("chache")
+      return cache[param]
+    } else {
+      console.log("no chache")
+      return (cache[param] = callback(...param))
     }
   }
-  return element > 1;
 }
-
-// console.log(first([5], isPrime)); // 5
 
 module.exports = {
   bind,
   curry,
   reduce,
+  unwrap,
   map,
-  filter
+  filter,
+  avgEven,
+  first
 };
