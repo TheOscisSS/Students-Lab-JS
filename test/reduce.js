@@ -1,4 +1,5 @@
 const assert = require("chai").assert;
+
 const reduce = require("../utils/helper").reduce;
 
 describe("reduce", () => {

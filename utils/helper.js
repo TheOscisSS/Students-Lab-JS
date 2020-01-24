@@ -1,6 +1,6 @@
-const bind = function (callback, param) {
-  return function (...params) {
-    return callback(param, ...params);
+const bind = function (callback, ...bindParam) {
+  return function (...param) {
+    return callback(...bindParam, ...param);
   };
 };
 
@@ -100,20 +100,41 @@ const first = function (array, callback) {
 const lazy = function (callback, ...param) {
   let res, flag = false;
   return function () {
-    return flag ? res : res = callback(...param);
+    if (!flag) {
+      flag = !flag
+      return res = callback(...param);
+    } else return res
   };
 };
 
 const memoize = function (callback) {
   let cache = {};
-  if (callback === memoize) {
-    throw new TypeError('Circle reference')
-  }
 
   return function (param) {
-    return (param in cache) ?
-      cache[param] :
-      (cache[param] = callback(param));
+    if (param in cache) {
+      return cache[param]
+    } else {
+      let result = callback(param);
+
+      let array = function Circle(obj) {
+        return Object.keys(obj).map(key => {
+          if (typeof obj[key] === "object" && obj[key]) {
+            if (obj[key] !== a) {
+              return Circle(obj[key]);
+            } else {
+              return true
+            }
+          } else return false
+        })
+      }
+
+      function flattenDeep(arr1) {
+        return reduce(arr1, (acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
+      }
+      console.log(flattenDeep(array(a)));
+
+      // return isCircle ? result : (cache[param] = result)
+    }
   };
 };
 

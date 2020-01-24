@@ -1,4 +1,5 @@
 const assert = require("chai").assert;
+
 const avgEven = require("../utils/helper").avgEven;
 
 describe('avgEven', () => {
