@@ -1,42 +1,41 @@
-const bind = function (callback, ...bindParam) {
-  return function (...param) {
+const bind = function(callback, ...bindParam) {
+  return function(...param) {
     return callback(...bindParam, ...param);
   };
 };
 
-const curry = function (callback) {
+const curry = function(callback) {
   return function curried(...param) {
-    return (param.length >= callback.length) ?
-      callback(...param) :
-      (...param2) => curried(...param, ...param2);
-  }
+    return param.length >= callback.length
+      ? callback(...param)
+      : (...param2) => curried(...param, ...param2);
+  };
 };
 
-const reduce = function (array, callback, initialValue) {
-  var index = 0;
-  var previousValue =
-    initialValue === undefined ? array[index++] : initialValue;
+const reduce = function(array, callback, initialValue) {
+  let index = 0,
+    previousValue = initialValue === undefined ? array[index++] : initialValue;
 
   function fold(currentValue, list) {
-    return (list.length) ?
-      fold(callback(currentValue, list.shift(), index++, array), list) :
-      currentValue;
+    return list.length
+      ? fold(callback(currentValue, list.shift(), index++, array), list)
+      : currentValue;
   }
 
   return fold(previousValue, array.slice(index, array.length));
 };
 
-const unwrap = function (callback, initialValue) {
+const unwrap = function(callback, initialValue) {
   function unfold(current, array) {
-    return ((next = callback(current))) ?
-      unfold(next[1], [...array, next[0]]) :
-      array;
+    return (next = callback(current))
+      ? unfold(next[1], [...array, next[0]])
+      : array;
   }
 
   return unfold(initialValue || 0, []);
 };
 
-const map = function (array, callback) {
+const map = function(array, callback) {
   return reduce(
     array,
     (previousValue, currentValue, index) => {
@@ -46,22 +45,23 @@ const map = function (array, callback) {
   );
 };
 
-const filter = function (array, callback) {
+const filter = function(array, callback) {
   return reduce(
     array,
-    function (previousValue, currentValue, index) {
-      return (callback(currentValue, index, array)) ? [...previousValue, currentValue] :
-        previousValue;
+    function(previousValue, currentValue, index) {
+      return callback(currentValue, index, array)
+        ? [...previousValue, currentValue]
+        : previousValue;
     },
     []
   );
 };
 
-const avgEven = function (array) {
-  const evenArray = filter(array, item => (item % 2 == 0 ? true : false));
+const avgEven = function(array) {
+  let evenArray = filter(array, item => (item % 2 == 0 ? true : false));
   if (!evenArray.length) return undefined;
 
-  const sumEvenArray = reduce(
+  let sumEvenArray = reduce(
     evenArray,
     (previous, current) => previous + current
   );
@@ -69,14 +69,15 @@ const avgEven = function (array) {
   return sumEvenArray / evenArray.length;
 };
 
-const randSum = function () {
-  let count = 0;
-  let array = unwrap(
-    current =>
-    ++count >= 10 ?
-    false : [current, current + Math.floor(Math.random() * 10)],
-    1
-  );
+const randSum = function() {
+  let count = 0,
+    array = unwrap(
+      current =>
+        ++count >= 10
+          ? false
+          : [current, current + Math.floor(Math.random() * 10)],
+      1
+    );
 
   return reduce(
     array,
@@ -84,8 +85,8 @@ const randSum = function () {
   );
 };
 
-const first = function (array, callback) {
-  var index = 0;
+const first = function(array, callback) {
+  let index = 0;
 
   function find(currentValue) {
     if (currentValue === undefined) return undefined;
@@ -97,47 +98,44 @@ const first = function (array, callback) {
   return find(array[index]);
 };
 
-const lazy = function (callback, ...param) {
-  let res, flag = false;
-  return function () {
+const lazy = function(callback, ...param) {
+  let res,
+    flag = false;
+  return function() {
     if (!flag) {
-      flag = !flag
-      return res = callback(...param);
-    } else return res
+      flag = !flag;
+      return (res = callback(...param));
+    } else return res;
   };
 };
 
-const memoize = function (callback) {
+const memoize = function(callback) {
   let cache = {};
 
-  return function (param) {
+  return function(param) {
     if (param in cache) {
-      return cache[param]
+      return cache[param];
     } else {
       let result = callback(param);
 
-      let array = function Circle(obj) {
-        return Object.keys(obj).map(key => {
-          if (typeof obj[key] === "object" && obj[key]) {
-            if (obj[key] !== a) {
-              return Circle(obj[key]);
-            } else {
-              return true
-            }
-          } else return false
-        })
+      function isCircleRef(obj) {
+        return reduce(
+          Object.keys(obj),
+          (prev, current) => {
+            if (typeof obj[current] === "object" && obj[current]) {
+              return obj[current] !== result ? array(obj[current]) : true;
+            } else return false || prev;
+          },
+          false
+        );
       }
 
-      function flattenDeep(arr1) {
-        return reduce(arr1, (acc, val) => Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val), []);
-      }
-      console.log(flattenDeep(array(a)));
+      if (isNaN(result) || result == undefined) return result;
 
-      // return isCircle ? result : (cache[param] = result)
+      return isCircleRef(result) ? result : (cache[param] = result);
     }
   };
 };
-
 
 module.exports = {
   bind,
