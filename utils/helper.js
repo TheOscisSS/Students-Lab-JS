@@ -123,7 +123,7 @@ const memoize = function(callback) {
           Object.keys(obj),
           (prev, current) => {
             if (typeof obj[current] === "object" && obj[current]) {
-              return obj[current] !== result ? array(obj[current]) : true;
+              return obj[current] !== result ? isCircleRef(obj[current]) : true;
             } else return false || prev;
           },
           false
