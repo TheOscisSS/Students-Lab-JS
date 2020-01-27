@@ -12,7 +12,7 @@ describe('first', () => {
    })
 
    it("Should find first prime number", () => {
-      let isPrime = (element, index, array) => {
+      const isPrime = (element, index, array) => {
          let start = 2;
          while (start <= Math.sqrt(element)) {
             if (element % start++ < 1) {

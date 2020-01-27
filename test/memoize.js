@@ -4,7 +4,7 @@ const memoize = require("../utils/helper").memoize;
 
 describe("memoize", () => {
   it("Should invoke the passed function and return result", () => {
-    let double = memoize(a => a * 2);
+    const double = memoize(a => a * 2);
 
     assert.strictEqual(double(5), 10);
   });
@@ -12,7 +12,7 @@ describe("memoize", () => {
   it("Should cache the result invoked function", () => {
     let count = 0;
 
-    let add = memoize(param => {
+    const add = memoize(param => {
       count++;
       return param;
     });
@@ -27,10 +27,10 @@ describe("memoize", () => {
 
   it("Shouldn't cache the objects, that reference to themselves", () => {
     let count = 0;
-    let b = {};
+    const b = {};
     b.a = b;
 
-    let add = memoize(param => {
+    const add = memoize(param => {
       count++;
       return b;
     });
@@ -46,12 +46,12 @@ describe("memoize", () => {
   it("shouldn't cache the result of functions witch return undefined or NaN", () => {
     let count = 0;
 
-    let first = memoize(param => {
+    const first = memoize(param => {
       count++;
       return undefined;
     });
 
-    let second = memoize(param => {
+    const second = memoize(param => {
       count++;
       return NaN;
     });
