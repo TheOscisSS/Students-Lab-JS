@@ -1,4 +1,10 @@
-const assert = require("chai").assert;
+const chai = require("chai");
+const spies = require("chai-spies");
+
+chai.use(spies);
+
+const expect = chai.expect;
+const assert = chai.assert;
 
 const memoize = require("../utils/helper").memoize;
 
@@ -10,60 +16,74 @@ describe("memoize", () => {
   });
 
   it("Should cache the result invoked function", () => {
-    let count = 0;
+    const spy = chai.spy();
+    const callback = value => {
+      spy();
+      return value;
+    };
 
-    const add = memoize(param => {
-      count++;
-      return param;
-    });
+    const fn = memoize(callback)
 
-    add(1);
-    assert.deepEqual(count, 1);
-    add(1);
-    assert.deepEqual(count, 1);
-    add(2);
-    assert.deepEqual(count, 2);
+    fn(1);
+    fn(1);
+    expect(spy).to.have.been.called.once;
+    fn(2);
+    expect(spy).to.have.been.called.twice;
   });
 
   it("Shouldn't cache the objects, that reference to themselves", () => {
-    let count = 0;
+    const spy = chai.spy();
     const b = {};
+    const callback = value => {
+      spy();
+      return value;
+    };
+
     b.a = b;
+    const fn = memoize(callback)
 
-    const add = memoize(param => {
-      count++;
-      return b;
-    });
-
-    add(1);
-    assert.deepEqual(count, 1);
-    add(1);
-    assert.deepEqual(count, 2);
-    add(2);
-    assert.deepEqual(count, 3);
+    fn(b);
+    fn(b);
+    expect(spy).to.have.been.called.twice;
   });
 
-  it("shouldn't cache the result of functions witch return undefined or NaN", () => {
-    let count = 0;
+  it("Should work with object", () => {
+    const spy = chai.spy();
+    const callback = value => {
+      spy();
+      return value;
+    };
 
-    const first = memoize(param => {
-      count++;
-      return undefined;
+    const fn = memoize(callback)
+
+    fn({
+      1: "first"
     });
-
-    const second = memoize(param => {
-      count++;
-      return NaN;
+    fn({
+      1: "first"
     });
+    expect(spy).to.have.been.called.once;
 
-    first(1);
-    assert.deepEqual(count, 1);
-    first(1);
-    assert.deepEqual(count, 2);
+    fn({
+      1: 'second'
+    });
+    expect(spy).to.have.been.called.twice;
+  })
 
-    second(2);
-    assert.deepEqual(count, 3);
-    second(2);
-    assert.deepEqual(count, 4);
-  });
+  it("Should work with array", () => {
+    const spy = chai.spy();
+    const callback = value => {
+      spy();
+      return value;
+    };
+
+    const fn = memoize(callback)
+
+    fn([1, 2, 3]);
+    fn([1, 2, 3]);
+    expect(spy).to.have.been.called.once;
+
+    fn('1', '2', '3');
+    expect(spy).to.have.been.called.twice;
+  })
 });

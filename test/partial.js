@@ -1,6 +1,6 @@
 const assert = require("chai").assert;
 
-const partial = require('../utils/helper').partial
+const partial = require('../utils/helper.js').partial
 
 describe("partial methods", () => {
   it("Should create a function that can be invoked with additional arguments", () => {

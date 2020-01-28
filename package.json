@@ -9,11 +9,10 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {
-    "chai-spies": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
     "mocha": "^7.0.0"
   },
   "author": "",

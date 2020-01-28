@@ -133,34 +133,41 @@ const lazy = function(callback, ...param) {
   };
 };
 
+const isCircleRef = function(obj) {
+  const rootObj = obj;
+
+  function circle(obj) {
+    return reduce(
+      Object.keys(obj),
+      (prev, current) => {
+        if (typeof obj[current] === "object" && obj[current]) {
+          return obj[current] !== rootObj ? circle(obj[current]) : true;
+        } else {
+          return false || prev;
+        }
+      },
+      false
+    );
+  }
+  if (obj == null) {
+    return false;
+  } else {
+    return circle(obj);
+  }
+};
+
 const memoize = function(callback) {
   const cache = {};
 
   return function(param) {
-    if (param in cache) {
+    const flag = isCircleRef(param);
+
+    if (!flag && JSON.stringify(param) in cache) {
       return cache[param];
     } else {
       const result = callback(param);
 
-      function isCircleRef(obj) {
-        return reduce(
-          Object.keys(obj),
-          (prev, current) => {
-            if (typeof obj[current] === "object" && obj[current]) {
-              return obj[current] !== result ? isCircleRef(obj[current]) : true;
-            } else {
-              return false || prev;
-            }
-          },
-          false
-        );
-      }
-
-      if (isNaN(result) || result == undefined) {
-        return result;
-      }
-
-      return isCircleRef(result) ? result : (cache[param] = result);
+      return flag ? result : (cache[JSON.stringify(param)] = result);
     }
   };
 };
