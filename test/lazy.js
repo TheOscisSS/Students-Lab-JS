@@ -1,44 +1,50 @@
-const assert = require("chai").assert;
-const expect = require('chai').expect
+const chai = require("chai");
+const spies = require("chai-spies");
+
+chai.use(spies);
+
+const expect = chai.expect;
+const assert = chai.assert;
 
 const lazy = require("../utils/helper").lazy;
 
 describe("lazy", () => {
-  // it("Should call function lazy", () => {
-  //   const lazyFunction = lazy(a => a * 2, 2);
+  it("Should call function lazy", () => {
+    const lazyFunction = lazy(a => a * 2, 2);
 
-  //   assert.strictEqual(lazyFunction(), 4);
-  //   assert.strictEqual(lazyFunction(), 4);
-  // });
+    assert.strictEqual(lazyFunction(), 4);
+    assert.strictEqual(lazyFunction(), 4);
+  });
 
   it("Should avoid repeated evaluations", () => {
-    let count = 0;
+    const spy = chai.spy();
     const callback = value => {
-      count++;
+      spy();
       return value;
     };
 
     const lazyFunction = lazy(callback, 10);
 
     assert.strictEqual(lazyFunction(), 10);
-    assert.equal(count, 1);
+    expect(spy).to.have.been.called.once;
+
     assert.strictEqual(lazyFunction(), 10);
-    assert.equal(count, 1);
+    expect(spy).to.have.been.called.once;
   });
 
   it("Should work with undefined argument", () => {
-    let count = 0;
+    const spy = chai.spy();
     const callback = value => {
-      count++;
+      spy();
       return value;
     };
 
     const lazyFunction = lazy(callback, undefined);
 
     assert.strictEqual(lazyFunction(), undefined);
-    assert.equal(count, 1);
+    expect(spy).to.have.been.called.once;
 
     assert.strictEqual(lazyFunction(), undefined);
-    assert.equal(count, 1);
+    expect(spy).to.have.been.called.once;
   });
 });

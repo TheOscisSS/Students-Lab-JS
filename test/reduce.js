@@ -1,4 +1,6 @@
-const assert = require("chai").assert;
+// const assert = require("chai").assert;
+
+import { assert } from "chai";
 
 const reduce = require("../utils/helper").reduce;
 
@@ -11,9 +13,13 @@ describe("reduce", () => {
     assert.strictEqual(result, initialValue);
   });
 
-  // it("Shouldn't work, when the array and initialValue is empty", () => {
-  //   assert.throws(reduce([], (a, b) => a + b), /TypeError: Reduce of empty array with no initial value/);
-  // });
+  it("Shouldn't work, when the array and initialValue is empty", () => {
+    assert.throw(
+      () => reduce([], (a, b) => a + b),
+      TypeError,
+      "Reduce of empty array with no initial value"
+    );
+  });
 
   it("Should work without initialValue", () => {
     const result = reduce([1, 3, 2], (a, b) => a + b);
