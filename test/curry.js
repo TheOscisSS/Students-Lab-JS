@@ -1,7 +1,6 @@
-const assert = require("chai").assert;
+import { assert } from "chai";
 
-const curry = require("../utils/helper").curry;
-const partial = require('../utils/helper').partial;
+import { curry, partial } from "../utils/helper";
 
 describe("curry", () => {
   it("Should curry based on the number of arguments given", () => {
@@ -15,21 +14,21 @@ describe("curry", () => {
   });
 
   it("Should bind arguments", () => {
-    const fn = (name, greeting) => `${name} say ${greeting}`
+    const fn = (name, greeting) => `${name} say ${greeting}`;
 
-    const Dima = (curry(fn))('Dima');
+    const Dima = curry(fn)("Dima");
 
-    assert.strictEqual(Dima('Hello'), 'Dima say Hello')
-    assert.strictEqual(Dima('Bye', '!'), 'Dima say Bye')
-  })
+    assert.strictEqual(Dima("Hello"), "Dima say Hello");
+    assert.strictEqual(Dima("Bye", "!"), "Dima say Bye");
+  });
 
   it("Should work with partial method", () => {
     const sum = (a, b, c) => a + b + c;
 
-    const curried = curry(sum)
-    const partialSum = partial(curried, 10)
+    const curried = curry(sum);
+    const partialSum = partial(curried, 10);
 
-    assert.strictEqual(partialSum(1)(1), 12)
-    assert.strictEqual(partialSum(2, 3), 15)
-  })
+    assert.strictEqual(partialSum(1)(1), 12);
+    assert.strictEqual(partialSum(2, 3), 15);
+  });
 });

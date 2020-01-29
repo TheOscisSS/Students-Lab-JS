@@ -1,8 +1,6 @@
-const assert = require("chai").assert;
+import { assert } from "chai";
 
-// import { assert } from "chai";
-
-const reduce = require("../utils/helper.js").reduce;
+import { reduce } from "../utils/helper.js";
 
 describe("reduce", () => {
   it("Should return initialValue, when the array is empty", () => {

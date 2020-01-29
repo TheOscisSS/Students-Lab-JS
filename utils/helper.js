@@ -43,9 +43,8 @@ const reduce = function(array, callback, initialValue) {
 };
 
 const unwrapRecurse = function(current, array, callback) {
-  return (next = callback(current))
-    ? unwrapRecurse(next[1], [...array, next[0]], callback)
-    : array;
+  const next = callback(current);
+  return next ? unwrapRecurse(next[1], [...array, next[0]], callback) : array;
 };
 
 const unwrap = function(callback, initialValue) {
@@ -172,7 +171,7 @@ const memoize = function(callback) {
   };
 };
 
-module.exports = {
+export {
   partial,
   curry,
   reduce,

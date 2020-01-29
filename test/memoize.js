@@ -1,12 +1,12 @@
-const chai = require("chai");
-const spies = require("chai-spies");
+import chai from "chai";
+import spies from "chai-spies";
 
 chai.use(spies);
 
 const expect = chai.expect;
 const assert = chai.assert;
 
-const memoize = require("../utils/helper").memoize;
+import { memoize } from "../utils/helper.js";
 
 describe("memoize", () => {
   it("Should invoke the passed function and return result", () => {
@@ -22,7 +22,7 @@ describe("memoize", () => {
       return value;
     };
 
-    const fn = memoize(callback)
+    const fn = memoize(callback);
 
     fn(1);
     fn(1);
@@ -40,7 +40,7 @@ describe("memoize", () => {
     };
 
     b.a = b;
-    const fn = memoize(callback)
+    const fn = memoize(callback);
 
     fn(b);
     fn(b);
@@ -54,7 +54,7 @@ describe("memoize", () => {
       return value;
     };
 
-    const fn = memoize(callback)
+    const fn = memoize(callback);
 
     fn({
       1: "first"
@@ -65,10 +65,10 @@ describe("memoize", () => {
     expect(spy).to.have.been.called.once;
 
     fn({
-      1: 'second'
+      1: "second"
     });
     expect(spy).to.have.been.called.twice;
-  })
+  });
 
   it("Should work with array", () => {
     const spy = chai.spy();
@@ -77,13 +77,13 @@ describe("memoize", () => {
       return value;
     };
 
-    const fn = memoize(callback)
+    const fn = memoize(callback);
 
     fn([1, 2, 3]);
     fn([1, 2, 3]);
     expect(spy).to.have.been.called.once;
 
-    fn('1', '2', '3');
+    fn("1", "2", "3");
     expect(spy).to.have.been.called.twice;
-  })
+  });
 });

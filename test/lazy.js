@@ -1,12 +1,12 @@
-const chai = require("chai");
-const spies = require("chai-spies");
+import chai from "chai";
+import spies from "chai-spies";
 
 chai.use(spies);
 
 const expect = chai.expect;
 const assert = chai.assert;
 
-const lazy = require("../utils/helper").lazy;
+import { lazy } from "../utils/helper.js";
 
 describe("lazy", () => {
   it("Should call function lazy", () => {
