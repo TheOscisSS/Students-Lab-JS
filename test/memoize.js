@@ -9,6 +9,9 @@ const assert = chai.assert;
 import { memoize } from "../utils/helper.js";
 
 describe("memoize", () => {
+  const callback = value => {
+    return value;
+  };
   it("Should invoke the passed function and return result", () => {
     const double = memoize(a => a * 2);
 
@@ -16,13 +19,9 @@ describe("memoize", () => {
   });
 
   it("Should cache the result invoked function", () => {
-    const spy = chai.spy();
-    const callback = value => {
-      spy();
-      return value;
-    };
+    const spy = chai.spy(callback);
 
-    const fn = memoize(callback);
+    const fn = memoize(spy);
 
     fn(1);
     fn(1);
@@ -32,15 +31,12 @@ describe("memoize", () => {
   });
 
   it("Shouldn't cache the objects, that reference to themselves", () => {
-    const spy = chai.spy();
     const b = {};
-    const callback = value => {
-      spy();
-      return value;
-    };
+
+    const spy = chai.spy(callback);
 
     b.a = b;
-    const fn = memoize(callback);
+    const fn = memoize(spy);
 
     fn(b);
     fn(b);
@@ -48,13 +44,9 @@ describe("memoize", () => {
   });
 
   it("Should work with object", () => {
-    const spy = chai.spy();
-    const callback = value => {
-      spy();
-      return value;
-    };
+    const spy = chai.spy(callback);
 
-    const fn = memoize(callback);
+    const fn = memoize(spy);
 
     fn({
       1: "first"
@@ -71,19 +63,30 @@ describe("memoize", () => {
   });
 
   it("Should work with array", () => {
-    const spy = chai.spy();
-    const callback = value => {
-      spy();
-      return value;
-    };
+    const spy = chai.spy(callback);
 
-    const fn = memoize(callback);
+    const fn = memoize(spy);
 
     fn([1, 2, 3]);
     fn([1, 2, 3]);
     expect(spy).to.have.been.called.once;
 
     fn("1", "2", "3");
+    expect(spy).to.have.been.called.twice;
+  });
+
+  it("Should work with function", () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn(() => 1);
+    fn(() => 1);
+    expect(spy).to.have.been.called.once;
+
+    fn(function() {
+      return "something";
+    });
     expect(spy).to.have.been.called.twice;
   });
 });

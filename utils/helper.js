@@ -73,13 +73,13 @@ const filter = function(array, callback) {
   );
 };
 
-const avgEven = function(array) {
-  const evenArray = filter(array, item => (item % 2 == 0 ? true : false));
+const avgEven = function(array, paramFilter = filter, paramReduce = reduce) {
+  const evenArray = paramFilter(array, item => (item % 2 == 0 ? true : false));
   if (!evenArray.length) {
     return undefined;
   }
 
-  const sumEvenArray = reduce(
+  const sumEvenArray = paramReduce(
     evenArray,
     (previous, current) => previous + current
   );
@@ -103,7 +103,7 @@ const randSum = function() {
   );
 };
 
-function findFirstRecurse(currentValue, index, array, callback) {
+const findFirstRecurse = function(currentValue, index, array, callback) {
   if (currentValue === undefined) {
     return undefined;
   }
@@ -112,7 +112,7 @@ function findFirstRecurse(currentValue, index, array, callback) {
   } else {
     return array[index];
   }
-}
+};
 
 const first = function(array, callback) {
   return findFirstRecurse(array[0], 0, array, callback);
@@ -155,16 +155,42 @@ const isCircleRef = function(obj) {
   }
 };
 
+// const memoize = function(callback) {
+//   const cache = {};
+
+//   return function(param) {
+//     const flag = isCircleRef(param);
+
+//     if (!flag && JSON.stringify(param) in cache) {
+//       return cache[param];
+//     } else {
+//       const result = callback(param);
+
+//       return flag ? result : (cache[JSON.stringify(param)] = result);
+//     }
+//   };
+// };
+
 const memoize = function(callback) {
   const cache = {};
 
   return function(param) {
     const flag = isCircleRef(param);
 
-    if (!flag && JSON.stringify(param) in cache) {
+    if (param in cache) {
       return cache[param];
+    } else if (
+      !flag &&
+      !Number.isNaN(param) &&
+      JSON.stringify(param) in cache
+    ) {
+      return cache[JSON.stringify(param)];
     } else {
       const result = callback(param);
+
+      if (Number.isNaN(param) || typeof param === "function") {
+        return (cache[param] = result);
+      }
 
       return flag ? result : (cache[JSON.stringify(param)] = result);
     }
@@ -172,6 +198,7 @@ const memoize = function(callback) {
 };
 
 export {
+  // module.exports = {
   partial,
   curry,
   reduce,

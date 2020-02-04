@@ -5,13 +5,8 @@ chai.use(spies);
 
 const expect = chai.expect;
 const assert = chai.assert;
-const should = chai.should()
 
-import {
-  avgEven,
-  reduce,
-  filter
-} from "../utils/helper.js";
+import { avgEven, filter, reduce } from "../utils/helper";
 
 describe("avgEven", () => {
   it("Should return undefined, when the array is empty", () => {
@@ -27,11 +22,12 @@ describe("avgEven", () => {
   });
 
   it("Should calls 'filter' and 'reduce' internally", () => {
-    let spy = chai.spy(avgEven)
-    // let spy1 = chai.spy(reduce)
+    const spyFilter = chai.spy(filter);
+    const spyReduce = chai.spy(reduce);
 
-    spy([1, 2, 3])
+    avgEven([1, 2], spyFilter, spyReduce);
 
-    expect(spy).to.have.been.called()
-  })
+    expect(spyFilter).to.have.been.called();
+    expect(spyReduce).to.have.been.called();
+  });
 });
