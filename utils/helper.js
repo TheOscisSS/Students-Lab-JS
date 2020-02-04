@@ -155,22 +155,6 @@ const isCircleRef = function(obj) {
   }
 };
 
-// const memoize = function(callback) {
-//   const cache = {};
-
-//   return function(param) {
-//     const flag = isCircleRef(param);
-
-//     if (!flag && JSON.stringify(param) in cache) {
-//       return cache[param];
-//     } else {
-//       const result = callback(param);
-
-//       return flag ? result : (cache[JSON.stringify(param)] = result);
-//     }
-//   };
-// };
-
 const memoize = function(callback) {
   const cache = {};
 
@@ -198,7 +182,6 @@ const memoize = function(callback) {
 };
 
 export {
-  // module.exports = {
   partial,
   curry,
   reduce,
