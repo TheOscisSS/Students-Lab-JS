@@ -6,9 +6,7 @@ chai.use(spies);
 const expect = chai.expect;
 const assert = chai.assert;
 
-import {
-  memoize
-} from "../utils/helper.js";
+import { memoize } from "../utils/helper.js";
 
 describe("memoize", () => {
   const callback = value => {

@@ -1,10 +1,6 @@
-import {
-  assert
-} from "chai";
+import { assert } from "chai";
 
-import {
-  first
-} from "../utils/helper.js";
+import { first } from "../utils/helper.js";
 
 describe("first", () => {
   it("Should work with empty array", () => {

@@ -1,11 +1,6 @@
-import {
-  assert
-} from "chai";
+import { assert } from "chai";
 
-import {
-  curry,
-  partial
-} from "../utils/helper";
+import { curry, partial } from "../utils/helper";
 
 describe("curry", () => {
   it("Should curry based on the number of arguments given", () => {
