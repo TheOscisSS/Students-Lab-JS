@@ -1,6 +1,11 @@
-import { assert } from "chai";
+import {
+  assert
+} from "chai";
 
-import { curry, partial } from "../utils/helper";
+import {
+  curry,
+  partial
+} from "../utils/helper";
 
 describe("curry", () => {
   it("Should curry based on the number of arguments given", () => {
@@ -16,10 +21,10 @@ describe("curry", () => {
   it("Should bind arguments", () => {
     const fn = (name, greeting) => `${name} say ${greeting}`;
 
-    const Dima = curry(fn)("Dima");
+    const dima = curry(fn)("Dima");
 
-    assert.strictEqual(Dima("Hello"), "Dima say Hello");
-    assert.strictEqual(Dima("Bye", "!"), "Dima say Bye");
+    assert.strictEqual(dima("Hello"), "Dima say Hello");
+    assert.strictEqual(dima("Bye", "!"), "Dima say Bye");
   });
 
   it("Should work with partial method", () => {

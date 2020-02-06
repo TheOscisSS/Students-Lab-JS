@@ -6,7 +6,11 @@ chai.use(spies);
 const expect = chai.expect;
 const assert = chai.assert;
 
-import { avgEven, filter, reduce } from "../utils/helper";
+import {
+  avgEven,
+  filter,
+  reduce
+} from "../utils/helper";
 
 describe("avgEven", () => {
   it("Should return undefined, when the array is empty", () => {
@@ -17,7 +21,7 @@ describe("avgEven", () => {
     assert.strictEqual(avgEven([1]), undefined);
   });
 
-  it("Should word with negative numbers", () => {
+  it("Should work with negative numbers", () => {
     assert.strictEqual(avgEven([-2]), -2);
   });
 

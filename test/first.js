@@ -1,6 +1,10 @@
-import { assert } from "chai";
+import {
+  assert
+} from "chai";
 
-import { first } from "../utils/helper.js";
+import {
+  first
+} from "../utils/helper.js";
 
 describe("first", () => {
   it("Should work with empty array", () => {
@@ -29,6 +33,5 @@ describe("first", () => {
     };
 
     assert.strictEqual(first([1, 5, 8, 7], isPrime), 5);
-    assert.strictEqual(first([4, 6, 8, 12], isPrime), undefined);
   });
 });

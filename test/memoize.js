@@ -6,7 +6,9 @@ chai.use(spies);
 const expect = chai.expect;
 const assert = chai.assert;
 
-import { memoize } from "../utils/helper.js";
+import {
+  memoize
+} from "../utils/helper.js";
 
 describe("memoize", () => {
   const callback = value => {
@@ -75,18 +77,66 @@ describe("memoize", () => {
     expect(spy).to.have.been.called.twice;
   });
 
-  it("Should work with function", () => {
+  it("Shouldn't work with function", () => {
     const spy = chai.spy(callback);
 
     const fn = memoize(spy);
 
     fn(() => 1);
     fn(() => 1);
+    expect(spy).to.have.been.called.twice;
+  });
+
+  it("Should work with null", () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn(null);
+    fn(null);
     expect(spy).to.have.been.called.once;
 
-    fn(function() {
-      return "something";
-    });
+    fn(NaN);
     expect(spy).to.have.been.called.twice;
+  });
+
+  it("Should work with NaN", () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn(NaN);
+    fn(NaN);
+    expect(spy).to.have.been.called.once;
+  });
+
+  it("Should work with undefined", () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn(undefined);
+    fn(undefined);
+    expect(spy).to.have.been.called.once;
+  });
+
+  it("Should work with Infinity", () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn(Infinity);
+    fn(Infinity);
+    expect(spy).to.have.been.called.once;
+  });
+
+  it("Should work with -Infinity", () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn(-Infinity);
+    fn(-Infinity);
+    expect(spy).to.have.been.called.once;
   });
 });
