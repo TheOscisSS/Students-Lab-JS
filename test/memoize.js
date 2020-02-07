@@ -6,7 +6,9 @@ chai.use(spies);
 const expect = chai.expect;
 const assert = chai.assert;
 
-import { memoize } from "../utils/helper.js";
+import {
+  memoize
+} from "../utils/helper.js";
 
 describe("memoize", () => {
   const callback = value => value;
@@ -63,4 +65,14 @@ describe("memoize", () => {
       expect(spy).to.have.been.called.once;
     }
   });
+
+  it('should work with the same arguments wrapped in string', () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+
+    fn("test");
+    fn("\"test\"");
+    expect(spy).to.have.been.called.twice;
+  })
 });
