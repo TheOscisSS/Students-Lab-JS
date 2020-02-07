@@ -70,9 +70,24 @@ describe("memoize", () => {
     const spy = chai.spy(callback);
 
     const fn = memoize(spy);
+    const testArg = "test"
 
-    fn("test");
-    fn("\"test\"");
+    fn(testArg);
+    fn(JSON.stringify(testArg));
+
+    expect(spy).to.have.been.called.twice;
+  })
+
+  it('should work with the same object wrapped in string', () => {
+    const spy = chai.spy(callback);
+
+    const fn = memoize(spy);
+    const testObj = {}
+
+
+    fn(testObj);
+    fn(JSON.stringify(testObj));
+
     expect(spy).to.have.been.called.twice;
   })
 });
