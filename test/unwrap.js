@@ -1,4 +1,10 @@
-import { assert } from "chai";
+import chai from "chai";
+import spies from "chai-spies";
+
+chai.use(spies);
+
+const expect = chai.expect;
+const assert = chai.assert;
 
 import { unwrap } from "../utils/helper.js";
 
@@ -20,17 +26,19 @@ describe("unwrap", () => {
   });
 
   it("Shouldn't work when initialValue is undefined", () => {
-    const evensUpTo = n =>
-      unwrap(current =>
-        current >= n
-          ? false
-          : {
-              next: current,
-              state: current + 2
-            }
-      );
+    const callback = current =>
+      current >= 10
+        ? false
+        : {
+            next: current,
+            state: current + 2
+          };
 
-    assert.deepEqual(evensUpTo(10), []);
+    const spy = chai.spy(callback);
+
+    unwrap(spy);
+
+    expect(spy).to.have.been.called.with(undefined);
   });
 
   it("Should work with initialValue", () => {
